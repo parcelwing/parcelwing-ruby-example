@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Parcel Wing Ruby SDK Example</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Parcel Wing Ruby SDK</p>
+          <h1>Send a test email from a tiny Ruby app.</h1>
+          <p class="lede">
+            A minimal Sinatra example for trying the official Parcel Wing Ruby SDK with your own API key.
+          </p>
+        </div>
+        <div class="owl-card" aria-hidden="true">
+          <span class="owl">🦉</span>
+          <span class="trail">✦ ✉ ✦</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="panel form-panel">
+          <form method="post" action="/send">
+            <label>
+              API key
+              <input name="api_key" type="password" autocomplete="off" placeholder="pw_live_..." value="<%= h @defaults[:api_key] %>">
+              <small>Used only by this local app request. It is not saved.</small>
+            </label>
+
+            <label>
+              API base URL
+              <input name="base_url" type="url" value="<%= h @defaults[:base_url] %>">
+              <small>Use production, or point at a local Parcel Wing app.</small>
+            </label>
+
+            <div class="field-grid">
+              <label>
+                From
+                <input name="from" type="text" placeholder="Parcel Wing <hello@yourdomain.com>" required value="<%= h @defaults[:from] %>">
+              </label>
+
+              <label>
+                To
+                <input name="to" type="text" placeholder="you@example.com" required value="<%= h @defaults[:to] %>">
+                <small>Use commas for multiple recipients.</small>
+              </label>
+            </div>
+
+            <label>
+              Subject
+              <input name="subject" type="text" required value="<%= h @defaults[:subject] %>">
+            </label>
+
+            <label>
+              Plain text body
+              <textarea name="text" rows="7" required><%= h @defaults[:text] %></textarea>
+            </label>
+
+            <details>
+              <summary>Optional HTML body</summary>
+              <label>
+                HTML body
+                <textarea name="html" rows="7" spellcheck="false"><%= h @defaults[:html] %></textarea>
+              </label>
+            </details>
+
+            <button type="submit">Send test email</button>
+          </form>
+        </article>
+
+        <aside class="panel response-panel">
+          <h2>Response</h2>
+          <p class="muted">Send the form to see queued email IDs or Parcel Wing API errors.</p>
+
+          <% if @result %>
+            <div class="notice success">Email queued successfully.</div>
+            <pre><%= h pretty_json(@result) %></pre>
+          <% elsif @error %>
+            <div class="notice error">The request failed.</div>
+            <pre><%= h pretty_json(@error) %></pre>
+          <% else %>
+            <pre>Waiting for a test send…</pre>
+          <% end %>
+
+          <hr>
+
+          <h3>How this works</h3>
+          <ol>
+            <li>The browser posts this form to the local Sinatra server.</li>
+            <li>The server creates a <code>ParcelWing::Client</code>.</li>
+            <li>The SDK calls <code>client.emails.send(...)</code>.</li>
+          </ol>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
